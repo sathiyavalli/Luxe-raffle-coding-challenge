@@ -1,129 +1,173 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
-
-interface CartItem {
-  id: number;
-  quantity: number;
-}
+import Link from 'next/link';
 
 export default function CartPage() {
-  // TODO: This must come from the cart
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { items, updateQuantity, removeItem, cartTotal, isHydrated } = useCart();
 
-  const handleQuantityUpdate = (id: number, newQuantity: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item,
-      ),
+  // Show loading state until cart is hydrated
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-12">
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <div className="animate-spin mx-auto h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Loading your cart...
+            </h1>
+            <p className="text-gray-600">
+              Please wait while we load your items.
+            </p>
+          </div>
+        </div>
+      </div>
     );
-  };
+  }
 
-  const handleRemove = () => {
-    // TODO: Implement this
-  };
-
-  const handleCheckout = () => {
-    // TODO: Implement this. Redirect to /account
-  };
-
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
-
-      <div className="mb-8">
-        {items.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 mb-4">
-              <svg
-                className="mx-auto h-24 w-24 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13l-1.1 5M7 13h10m0 0v8a2 2 0 01-2 2H9a2 2 0 01-2-2v-8m10 0l1.1-5M9 21h6m-6 0a2 2 0 01-2-2v-8m8 10a2 2 0 002-2v-8"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-12">
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <ShoppingCart className="mx-auto h-24 w-24 text-gray-400 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Your cart is empty
-            </h3>
-            <p className="text-gray-500 mb-6">
+            </h1>
+            <p className="text-gray-600 mb-6">
               Start winning your dream car by adding raffle tickets to your cart!
             </p>
-            <Button asChild>
-              <a href="/">Browse Raffles</a>
-            </Button>
+            <Link href="/">
+              <Button>Browse Raffles</Button>
+            </Link>
           </div>
-        ) : (
-          <ul className="space-y-4">
-            {items.map((item) => {
-              // TODO: We need to load data from the server somehow
-              const name = '';
-              const imageSrc = '';
+        </div>
+      </div>
+    );
+  }
 
-              return (
-                <li key={item.id} className="flex items-center space-x-4">
-                  <Image
-                    src={imageSrc}
-                    alt={name}
-                    width={80}
-                    height={60}
-                    className="rounded-md"
-                  />
-                  <div className="flex-grow">
-                    <h3 className="font-semibold">{name}</h3>
-                    <div className="flex items-center space-x-2 mt-2">
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-md">
+              <ul className="divide-y">
+                {items.map((item) => (
+                  <li
+                    key={item.id}
+                    className="p-6 flex items-center gap-4 hover:bg-gray-50 transition"
+                  >
+                    <Image
+                      src={item.raffle.image || '/placeholder.svg'}
+                      alt={item.raffle.name}
+                      width={120}
+                      height={80}
+                      className="rounded-md object-cover"
+                    />
+                    <div className="flex-grow">
+                      <h3 className="font-semibold text-lg">
+                        {item.raffle.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mt-1">
+                        {item.raffle.description}
+                      </p>
+                      <p className="text-green-600 font-semibold mt-2">
+                        {item.raffle.ticketPrice} € per ticket
+                      </p>
+                      <p className="text-gray-500 text-sm mt-1">
+                        Subtotal: {(item.raffle.ticketPrice * item.quantity).toLocaleString('de-DE')} €
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 border border-gray-300 rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="font-semibold min-w-8 text-center">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+
                       <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() =>
-                          handleQuantityUpdate(
-                            item.id,
-                            Math.max(1, item.quantity - 1),
-                          )
-                        }
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => removeItem(item.id)}
+                        className="gap-2"
                       >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="font-medium">{item.quantity}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() =>
-                          handleQuantityUpdate(item.id, item.quantity + 1)
-                        }
-                      >
-                        <Plus className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
+                        Remove
                       </Button>
                     </div>
-                  </div>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleRemove()}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-      <div className="flex justify-end">
-        <Button variant="default" onClick={handleCheckout}>
-          Checkout
-        </Button>
+          {/* Order Summary */}
+          <div>
+            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
+              <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+
+              <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Items:</span>
+                  <span className="font-semibold">{items.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Tickets:</span>
+                  <span className="font-semibold">
+                    {items.reduce((sum, item) => sum + item.quantity, 0)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span className="text-2xl font-bold text-green-600">
+                    {cartTotal.toLocaleString('de-DE')} €
+                  </span>
+                </div>
+              </div>
+
+              <Link href="/checkout">
+                <Button className="w-full mb-3">Proceed to Checkout</Button>
+              </Link>
+
+              <Link href="/">
+                <Button variant="outline" className="w-full">
+                  Continue Shopping
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

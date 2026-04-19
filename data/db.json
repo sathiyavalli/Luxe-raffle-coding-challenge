@@ -31,7 +31,7 @@
       "carPrice": 450000,
       "ticketPrice": 30,
       "totalTickets": 15000,
-      "availableTickets": 10238
+      "availableTickets": 10237
     },
     {
       "id": 4,
@@ -190,13 +190,25 @@
           "quantity": 1
         }
       ]
+    },
+    "eb051b9c-955e-446a-a595-70ed94046eb3": {
+      "id": "eb051b9c-955e-446a-a595-70ed94046eb3",
+      "items": [
+        {
+          "id": 3,
+          "quantity": 1
+        }
+      ]
     }
   },
   "userOrders": {
     "1": [
       "b2a7acf1-da5d-41f2-bc4e-3e8504eb0841",
-      "d57feba4-317b-4119-b7c7-a7d8f8c96621"
+      "d57feba4-317b-4119-b7c7-a7d8f8c96621",
+      "eb051b9c-955e-446a-a595-70ed94046eb3"
     ],
-    "undefined": ["bba8bd10-ce5f-4f2a-82fe-a92e1cf1ea5b"]
+    "undefined": [
+      "bba8bd10-ce5f-4f2a-82fe-a92e1cf1ea5b"
+    ]
   }
 }

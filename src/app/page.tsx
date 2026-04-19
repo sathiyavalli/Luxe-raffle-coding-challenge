@@ -2,12 +2,25 @@
 
 import RafflesGrid from '@/components/raffles-grid/raffles-grid';
 import { getRaffles } from '@/server-functions/getRaffles';
+import { Raffle } from '@/types/Raffle';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [raffles, setRaffles] = useState([]);
+  const [raffles, setRaffles] = useState<Raffle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [welcomeMessage, setWelcomeMessage] = useState('');
+
+  useEffect(() => {
+    // Check if user has visited before
+    const hasVisited = localStorage.getItem('luxeRaffleVisited');
+    if (!hasVisited) {
+      setWelcomeMessage('Welcome to LuxeRaffle! 🏎️');
+      localStorage.setItem('luxeRaffleVisited', 'true');
+    } else {
+      setWelcomeMessage('Welcome back! ✨');
+    }
+  }, []);
 
   useEffect(() => {
     const fetchRaffles = async () => {
@@ -17,7 +30,7 @@ export default function Home() {
         setRaffles(data);
       } catch (err) {
         console.error('Failed to fetch raffles:', err);
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
@@ -74,5 +87,14 @@ export default function Home() {
     );
   }
 
-  return <RafflesGrid raffles={raffles} />;
+  return (
+    <>
+      {welcomeMessage && (
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 text-center font-medium animate-fade-in-down">
+          {welcomeMessage}
+        </div>
+      )}
+      <RafflesGrid raffles={raffles} />
+    </>
+  );
 }

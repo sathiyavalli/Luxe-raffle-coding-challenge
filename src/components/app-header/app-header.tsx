@@ -1,24 +1,27 @@
 import { ShoppingCart, User } from 'lucide-react';
 import Link from 'next/link';
-import { UserIcon } from '../user-icon/user-icon';
+import dynamic from 'next/dynamic';
 import { getAuthToken } from '@/lib/auth-cookies';
 import { decryptToken } from '@/lib/token';
-import { logout } from '@/server-functions/logout';
+import { UserMenu } from '../user-menu/user-menu';
 
-const CartCounter = ({ items }: { items: number }) => (
-  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-    {items}
-  </span>
-);
+// Dynamically import CartIcon as client component
+const CartIcon = dynamic(() => import('../cart-icon/cart-icon'), {
+  loading: () => (
+    <div className="relative animate-pulse">
+      <ShoppingCart size={24} className="text-gray-400 mt-1" />
+      <div className="absolute -top-2 -right-2 h-5 w-5 bg-gray-300 rounded-full"></div>
+    </div>
+  )
+});
 
 export const AppHeader = async () => {
   const token = await getAuthToken();
   const user = token ? decryptToken(token) : null;
   const firstName = user?.firstName || '';
-  const amountOfCartItems = 0; // TODO: Somehow get this from the cart
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="sticky top-0 z-40 bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="text-2xl font-bold text-gray-800">
@@ -47,33 +50,15 @@ export const AppHeader = async () => {
           </nav>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
+          <CartIcon />
           {firstName ? (
-            <div className="flex items-center space-x-4">
-              <Link href="/account">
-                <UserIcon firstName={firstName} />
-              </Link>
-              <form action={logout}>
-                <button
-                  type="submit"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
-                >
-                  Logout
-                </button>
-              </form>
-            </div>
+            <UserMenu firstName={firstName} />
           ) : (
-            <Link href="/login" className="text-gray-600 hover:text-gray-800">
+            <Link href="/login" className="text-gray-600 hover:text-gray-800 transition-colors">
               <User size={24} />
             </Link>
           )}
-          <Link
-            href="/cart"
-            className="text-gray-600 hover:text-gray-800 relative"
-          >
-            <ShoppingCart size={24} />
-            {!!amountOfCartItems && <CartCounter items={amountOfCartItems} />}
-          </Link>
         </div>
       </div>
     </header>

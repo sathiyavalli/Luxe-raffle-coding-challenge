@@ -1,23 +1,33 @@
 'use client';
 
-import { OrderItem } from '@/types/OrderItem';
+import { Raffle } from '@/types/Raffle';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+export type CartItem = {
+  id: number;
+  raffle: Raffle;
+  quantity: number;
+};
+
 type CartContextType = {
-  items: OrderItem[];
-  addItem: (id: number, quantity: number) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  items: CartItem[];
+  addItem: (raffle: Raffle, quantity: number) => void;
+  removeItem: (raffleId: number) => void;
+  updateQuantity: (raffleId: number, quantity: number) => void;
   clearCart: () => void;
   cartTotal: number;
+  itemCount: number;
+  isHydrated: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = 'luxe-raffle-cart';
 
+export { CartContext };
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<OrderItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Load cart from localStorage on mount
@@ -44,29 +54,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isHydrated]);
 
-  const addItem = (id: number, quantity: number) => {
+  const addItem = (raffle: Raffle, quantity: number) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === id);
+      const existingItem = prevItems.find((item) => item.id === raffle.id);
       if (existingItem) {
         return prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + quantity } : item
+          item.id === raffle.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
         );
       }
-      return [...prevItems, { id, quantity }];
+      return [...prevItems, { id: raffle.id, raffle, quantity }];
     });
   };
 
-  const removeItem = (id: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const removeItem = (raffleId: number) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== raffleId));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (raffleId: number, quantity: number) => {
     if (quantity <= 0) {
-      removeItem(id);
+      removeItem(raffleId);
     } else {
       setItems((prevItems) =>
         prevItems.map((item) =>
-          item.id === id ? { ...item, quantity } : item
+          item.id === raffleId ? { ...item, quantity } : item
         )
       );
     }
@@ -76,7 +88,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
   };
 
-  const cartTotal = items.length;
+  const cartTotal = items.reduce(
+    (total, item) => total + item.raffle.ticketPrice * item.quantity,
+    0
+  );
+
+  const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   if (!isHydrated) {
     return <>{children}</>;
@@ -91,6 +108,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateQuantity,
         clearCart,
         cartTotal,
+        itemCount,
+        isHydrated,
       }}
     >
       {children}
