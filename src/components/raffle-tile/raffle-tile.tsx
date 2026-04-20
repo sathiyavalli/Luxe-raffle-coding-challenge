@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { Raffle } from '@/types/Raffle';
 import Image from 'next/image';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { useCart } from '@/context/CartContext';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Gift } from 'lucide-react';
+import GiftModal from '../gift-modal/gift-modal';
 
 export default function RaffleTile({ raffle }: { raffle: Raffle }) {
   const { addItem, items, updateQuantity } = useCart();
+  const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
 
   // Find if this raffle is already in cart
   const cartItem = items.find((item) => item.id === raffle.id);
@@ -37,7 +40,7 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
   const isHot = soldPercentage > 70; // Hot if more than 70% sold
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl group h-full flex flex-col border border-gray-200 bg-gradient-to-br from-white to-gray-50">
+    <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl group h-full flex flex-col border-2 border-[#D4AF37] bg-gradient-to-br from-[#FDF8F0] to-[#FAF4E6]">
       {/* Image Container with Price Tag */}
       <div className="relative overflow-hidden bg-gray-100 h-48">
         {/* Hot Badge */}
@@ -79,7 +82,7 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-[#D4AF37] to-[#B8860B] h-full rounded-full transition-all duration-300"
               style={{ width: `${soldPercentage}%` }}
             ></div>
           </div>
@@ -87,48 +90,81 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
 
         <p className="text-gray-600 mb-3 text-sm">{raffle.description}</p>
 
-        <div className="flex gap-2 mt-auto">
-          {cartQuantity === 0 ? (
-            <>
-              <Button
-                onClick={handleAddToCart}
-                variant="outline"
-                className="flex-1 transition-all hover:bg-blue-50"
-              >
-                Add to Cart
-              </Button>
-              <Button variant="outline" className="flex-1">
-                Details
-              </Button>
-            </>
-          ) : (
-            <>
-              <div className="flex-1 flex items-center justify-between gap-2 bg-blue-50 rounded-lg px-3  border border-blue-200">
-                <button
-                  onClick={handleDecreaseQuantity}
-                  className="flex items-center justify-center w-6 py-2 rounded hover:bg-blue-200 transition-colors"
-                  aria-label="Decrease quantity"
-                >
-                  <Minus size={16} className="text-blue-600" />
-                </button>
-                <span className="font-semibold text-blue-600 min-w-8 text-center">
-                  {cartQuantity}
-                </span>
-                <button
-                  onClick={handleIncreaseQuantity}
-                  className="flex items-center justify-center w-6 h-6 rounded hover:bg-blue-200 transition-colors"
-                  aria-label="Increase quantity"
-                >
-                  <Plus size={16} className="text-blue-600" />
-                </button>
+        <div className="space-y-2 mt-auto">
+          {/* Show gift badge if this item has a gift */}
+          {cartQuantity > 0 && cartItem?.gift && (
+            <div className="bg-gradient-to-r from-[#8B5CF6]/20 to-[#D4AF37]/20 rounded-lg px-3 py-2 border-2 border-[#8B5CF6] flex items-center justify-center gap-2">
+              <span className="text-2xl">🎁</span>
+              <div className="text-left text-sm">
+                <p className="font-semibold text-[#8B5CF6]">Gift Item</p>
+                <p className="text-xs text-[#8B7500]">{cartItem.gift.recipientEmail}</p>
               </div>
-              <Button variant="outline" className="flex-1">
-                Details
-              </Button>
-            </>
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            {cartQuantity === 0 ? (
+              <>
+                <Button
+                  onClick={handleAddToCart}
+                  variant="outline"
+                  className="flex-1 transition-all border-2 border-[#D4AF37] text-[#D4AF37] font-semibold hover:bg-[#D4AF37] hover:text-white hover:shadow-lg hover:shadow-[#D4AF37]/50 active:shadow-md"
+                >
+                  Enter Raffle
+                </Button>
+                <Button variant="outline" className="flex-1 transition-all border-2 border-[#D4AF37] text-[#D4AF37] font-semibold hover:bg-[#D4AF37] hover:text-white hover:shadow-lg hover:shadow-[#D4AF37]/50 active:shadow-md">
+                  Details
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex-1 flex items-center justify-between gap-2 bg-[#D4AF37]/10 rounded-lg px-3  border-2 border-[#D4AF37]">
+                  <button
+                    onClick={handleDecreaseQuantity}
+                    className="flex items-center justify-center w-6 py-2 rounded hover:bg-[#D4AF37]/20 transition-colors"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus size={16} className="text-[#D4AF37]" />
+                  </button>
+                  <span className="font-semibold text-[#D4AF37] min-w-8 text-center">
+                    {cartQuantity}
+                  </span>
+                  <button
+                    onClick={handleIncreaseQuantity}
+                    className="flex items-center justify-center w-6 h-6 rounded hover:bg-[#D4AF37]/20 transition-colors"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus size={16} className="text-[#D4AF37]" />
+                  </button>
+                </div>
+                <Button variant="outline" className="flex-1 transition-all border-2 border-[#D4AF37] text-[#D4AF37] font-semibold hover:bg-[#D4AF37] hover:text-white hover:shadow-lg hover:shadow-[#D4AF37]/50 active:shadow-md">
+                  Details
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Gift Button - Only shows when user has tickets in cart */}
+          {cartQuantity > 0 && (
+            <Button
+              onClick={() => setIsGiftModalOpen(true)}
+              variant="outline"
+              className="w-full transition-all duration-300 border-2 border-[#8B5CF6] text-white font-semibold hover:bg-[#8B5CF6] hover:shadow-lg hover:shadow-[#8B5CF6]/70 active:shadow-md flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B5CF6]/80 to-[#8B5CF6]/60 hover:from-[#8B5CF6] hover:to-[#8B5CF6] py-3"
+            >
+              <Gift size={20} />
+              🎁 Send as Gift
+            </Button>
           )}
         </div>
       </div>
+
+      {/* Gift Modal */}
+      <GiftModal
+        isOpen={isGiftModalOpen}
+        onClose={() => setIsGiftModalOpen(false)}
+        raffle={raffle}
+        availableTickets={cartQuantity}
+      />
     </div>
   );
 }

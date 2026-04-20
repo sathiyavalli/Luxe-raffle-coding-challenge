@@ -3,6 +3,7 @@
 import RafflesGrid from '@/components/raffles-grid/raffles-grid';
 import { getRaffles } from '@/server-functions/getRaffles';
 import { Raffle } from '@/types/Raffle';
+import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -10,17 +11,32 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [welcomeMessage, setWelcomeMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Check if user has visited before
     const hasVisited = localStorage.getItem('luxeRaffleVisited');
+    const username = user?.firstName || 'Guest';
+    
+    let message = '';
     if (!hasVisited) {
-      setWelcomeMessage('Welcome to LuxeRaffle! 🏎️');
+      message = `Welcome ${username}! 🏎️`;
       localStorage.setItem('luxeRaffleVisited', 'true');
     } else {
-      setWelcomeMessage('Welcome back! ✨');
+      message = `Welcome back, ${username}! ✨`;
     }
-  }, []);
+    
+    setWelcomeMessage(message);
+    setShowToast(true);
+    
+    // Auto-hide toast after 4 seconds
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 4000);
+    
+    return () => clearTimeout(timer);
+  }, [user?.firstName]);
 
   useEffect(() => {
     const fetchRaffles = async () => {
@@ -43,18 +59,18 @@ export default function Home() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto mb-8"></div>
+          <div className="h-8 bg-[#FDF8F0] rounded w-1/4 mx-auto mb-8 border border-[#D4AF37]"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="h-48 bg-gray-200"></div>
+              <div key={i} className="bg-[#FDF8F0] rounded-lg shadow-md overflow-hidden border-2 border-[#D4AF37]">
+                <div className="h-48 bg-[#FAF4E6]"></div>
                 <div className="p-4">
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="h-6 bg-[#FAF4E6] rounded mb-2"></div>
+                  <div className="h-4 bg-[#FAF4E6] rounded mb-2"></div>
+                  <div className="h-4 bg-[#FAF4E6] rounded w-3/4 mb-4"></div>
                   <div className="flex justify-between">
-                    <div className="h-8 bg-gray-200 rounded w-20"></div>
-                    <div className="h-8 bg-gray-200 rounded w-24"></div>
+                    <div className="h-8 bg-[#D4AF37] rounded w-20"></div>
+                    <div className="h-8 bg-[#D4AF37] rounded w-24"></div>
                   </div>
                 </div>
               </div>
@@ -78,7 +94,7 @@ export default function Home() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-[#D4AF37] hover:bg-[#B8860B] text-white px-4 py-2 rounded font-semibold transition-all shadow-lg hover:shadow-xl"
           >
             Try Again
           </button>
@@ -89,9 +105,13 @@ export default function Home() {
 
   return (
     <>
-      {welcomeMessage && (
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 text-center font-medium animate-fade-in-down">
-          {welcomeMessage}
+      {/* Welcome Toast Notification */}
+      {showToast && welcomeMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top">
+          <div className="bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-white px-6 py-4 rounded-lg shadow-xl font-medium text-lg flex items-center gap-2">
+            <span className="text-2xl">✨</span>
+            {welcomeMessage}
+          </div>
         </div>
       )}
       <RafflesGrid raffles={raffles} />

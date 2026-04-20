@@ -3,17 +3,26 @@
 import { Raffle } from '@/types/Raffle';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+export type GiftInfo = {
+  recipientEmail: string;
+  message: string;
+  senderName: string;
+};
+
 export type CartItem = {
   id: number;
   raffle: Raffle;
   quantity: number;
+  gift?: GiftInfo; // Only present if this is a gift purchase
 };
 
 type CartContextType = {
   items: CartItem[];
   addItem: (raffle: Raffle, quantity: number) => void;
-  removeItem: (raffleId: number) => void;
-  updateQuantity: (raffleId: number, quantity: number) => void;
+  addGiftItem: (raffle: Raffle, quantity: number, giftInfo: GiftInfo) => void;
+  removeItem: (raffleId: number, isGift?: boolean) => void;
+  updateQuantity: (raffleId: number, quantity: number, isGift?: boolean) => void;
+  updateGiftMessage: (raffleId: number, message: string) => void;
   clearCart: () => void;
   cartTotal: number;
   itemCount: number;
@@ -56,10 +65,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (raffle: Raffle, quantity: number) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === raffle.id);
+      const existingItem = prevItems.find((item) => item.id === raffle.id && !item.gift);
       if (existingItem) {
         return prevItems.map((item) =>
-          item.id === raffle.id
+          item.id === raffle.id && !item.gift
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -68,20 +77,49 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeItem = (raffleId: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== raffleId));
+  const addGiftItem = (raffle: Raffle, quantity: number, giftInfo: GiftInfo) => {
+    setItems((prevItems) => {
+      // Each gift is independent, so we create a new entry for each gift
+      return [...prevItems, { id: raffle.id, raffle, quantity, gift: giftInfo }];
+    });
   };
 
-  const updateQuantity = (raffleId: number, quantity: number) => {
+  const removeItem = (raffleId: number, isGift?: boolean) => {
+    setItems((prevItems) => {
+      if (isGift !== undefined) {
+        // Remove specific gift item
+        const itemIndex = prevItems.findIndex((item) => item.id === raffleId && !!item.gift === isGift);
+        if (itemIndex > -1) {
+          return prevItems.filter((_, index) => index !== itemIndex);
+        }
+      }
+      // Remove regular item
+      return prevItems.filter((item) => item.id !== raffleId || item.gift);
+    });
+  };
+
+  const updateQuantity = (raffleId: number, quantity: number, isGift?: boolean) => {
     if (quantity <= 0) {
-      removeItem(raffleId);
+      removeItem(raffleId, isGift);
     } else {
       setItems((prevItems) =>
         prevItems.map((item) =>
-          item.id === raffleId ? { ...item, quantity } : item
+          item.id === raffleId && (!isGift ? !item.gift : item.gift)
+            ? { ...item, quantity }
+            : item
         )
       );
     }
+  };
+
+  const updateGiftMessage = (raffleId: number, message: string) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === raffleId && item.gift
+          ? { ...item, gift: { ...item.gift, message } }
+          : item
+      )
+    );
   };
 
   const clearCart = () => {
@@ -104,8 +142,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         items,
         addItem,
+        addGiftItem,
         removeItem,
         updateQuantity,
+        updateGiftMessage,
         clearCart,
         cartTotal,
         itemCount,

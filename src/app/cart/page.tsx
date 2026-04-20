@@ -2,12 +2,15 @@
 
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
-import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, Edit2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, cartTotal, isHydrated } = useCart();
+  const { items, updateQuantity, removeItem, updateGiftMessage, cartTotal, isHydrated } = useCart();
+  const [editingGiftId, setEditingGiftId] = useState<number | null>(null);
+  const [editingMessage, setEditingMessage] = useState<string>('');
 
   // Show loading state until cart is hydrated
   if (!isHydrated) {
