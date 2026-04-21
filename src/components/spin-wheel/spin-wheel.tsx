@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 
@@ -23,6 +23,7 @@ const REWARDS = [
 ];
 
 export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+  // All hooks must be called unconditionally at the top
   const [state, setState] = useState<SpinState>('hidden');
   const [rotation, setRotation] = useState(0);
   const [selectedReward, setSelectedReward] = useState<(typeof REWARDS)[0] | null>(null);
@@ -32,6 +33,8 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   // Check daily spin limitation
   useEffect(() => {
+    if (!isLoggedIn) return; // Early return after hooks
+
     const checkDailyLimit = () => {
       const today = new Date().toDateString();
       const lastSpinDate = localStorage.getItem(DAILY_SPIN_KEY);
@@ -52,28 +55,7 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     };
 
     checkDailyLimit();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-
-      const percent = (scrollTop / (documentHeight - windowHeight)) * 100;
-
-      if (percent >= 40 && percent <= 50 && state === 'hidden') {
-        setState('ready');
-      }
-
-      if (percent < 35 && state !== 'hidden') {
-        setState('hidden');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [state]);
+  }, [isLoggedIn]);
 
   const handleSpin = () => {
     if (state !== 'ready' || !canSpin || isSpinning) return;
@@ -114,12 +96,26 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     setState('hidden');
   };
 
-  // Hidden state - nothing to show
-  if (state === 'hidden') {
+  // Return null if not logged in - hide wheel completely
+  if (!isLoggedIn) {
     return null;
   }
 
-  // Ready state - show floating button
+  // Hidden state - show floating button
+  if (state === 'hidden') {
+    return (
+      <button
+        onClick={() => setState('ready')}
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-full p-4 shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95"
+        aria-label="Open spin wheel"
+        title="Click to spin and win rewards!"
+      >
+        <Sparkles className="w-6 h-6 md:w-8 md:h-8 animate-pulse" />
+      </button>
+    );
+  }
+
+  // Ready state - show full wheel modal
   if (state === 'ready' || state === 'spinning') {
     return (
       <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
@@ -321,7 +317,7 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </button>
 
           <p className="text-center text-slate-400 text-xs mt-4 sm:mt-6 tracking-widest uppercase">
-            ★ Unlimited Spins • Win Luxury Rewards ★
+            ★ Daily 1x Spin • Win Luxury Rewards ★
           </p>
         </div>
       </div>

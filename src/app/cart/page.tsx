@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { Minus, Plus, Trash2, ShoppingCart, Edit2 } from 'lucide-react';
@@ -189,11 +191,11 @@ export default function CartPage() {
               </div>
 
               <Link href="/checkout" className="block w-full">
-                <Button asChild className=\"w-full mb-3 text-sm sm:text-base py-2 sm:py-2\">Proceed to Checkout</Button>
+                <Button className="w-full mb-3 text-sm sm:text-base py-2 sm:py-2">Proceed to Checkout</Button>
               </Link>
 
-              <Link href=\"/\" className=\"block w-full\">
-                <Button asChild variant=\"outline\" className=\"w-full text-sm sm:text-base py-2 sm:py-2\">
+              <Link href="/" className="block w-full">
+                <Button variant="outline" className="w-full text-sm sm:text-base py-2 sm:py-2">
                   Continue Shopping
                 </Button>
               </Link>

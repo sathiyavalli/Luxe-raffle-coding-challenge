@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,15 +19,18 @@ import { logout } from '@/server-functions/logout';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { User } from '@/types/User';
+import { Order } from '@/types/Order';
+import { Raffle } from '@/types/Raffle';
 
 export default function AccountPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [user, setUser] = useState(null);
-  const [orders, setOrders] = useState([]);
-  const [raffles, setRaffles] = useState({});
+  const [user, setUser] = useState<User | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [raffles, setRaffles] = useState<Record<string, Raffle>>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
@@ -61,7 +66,7 @@ export default function AccountPage() {
           setOrders(ordersData || []);
 
           // Create a map of raffles by ID for quick lookup
-          const raffleMap = {};
+          const raffleMap: Record<number, Raffle> = {};
           rafflesData.forEach((raffle) => {
             raffleMap[raffle.id] = raffle;
           });
@@ -158,6 +163,16 @@ export default function AccountPage() {
               </Button>
             </form>
           </div>
+
+          {/* Browse Raffles Button */}
+          <Link href="/" className="block">
+            <button className="w-full bg-gradient-to-r from-[#D4AF37] to-[#B8860B] hover:from-[#B8860B] hover:to-[#8B6914] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Browse Raffles & Try Your Luck
+            </button>
+          </Link>
 
           {/* Quick Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

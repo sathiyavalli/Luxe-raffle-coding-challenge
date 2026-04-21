@@ -122,31 +122,31 @@ export const TimedRewardBanner = () => {
 
       {/* Timed Reward Banner */}
       <div className="relative bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
+        <div className="max-w-7xl mx-auto px-3 py-3 sm:py-3 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               {isReady && claimsLeft > 0 ? (
                 <>
-                  <Gift className="w-4 h-4 sm:w-5 sm:h-5 animate-bounce flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="font-bold text-xs sm:text-sm leading-tight">🎁 Your reward is ready!</span>
-                    <span className="text-xs opacity-90 truncate">Claim €5 bonus • {claimsLeft} claims left today</span>
+                  <Gift className="w-5 h-5 sm:w-5 sm:h-5 animate-bounce flex-shrink-0" />
+                  <div className="flex flex-col gap-0 min-w-0">
+                    <span className="font-bold text-sm sm:text-sm leading-snug">🎁 Your reward is ready!</span>
+                    <span className="text-xs opacity-95 leading-snug">Claim €5 bonus • {claimsLeft} claims left today</span>
                   </div>
                 </>
               ) : claimsLeft <= 0 ? (
                 <>
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="font-bold text-xs sm:text-sm leading-tight">⏰ Daily claim limit reached</span>
-                    <span className="text-xs opacity-90 truncate">Come back tomorrow for more rewards</span>
+                  <Clock className="w-5 h-5 sm:w-5 sm:h-5 flex-shrink-0" />
+                  <div className="flex flex-col gap-0 min-w-0">
+                    <span className="font-bold text-sm sm:text-sm leading-snug">⏰ Daily claim limit reached</span>
+                    <span className="text-xs opacity-95 leading-snug">Come back tomorrow for more rewards</span>
                   </div>
                 </>
               ) : (
                 <>
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 animate-spin flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="font-bold text-xs sm:text-sm leading-tight">⏳ Next reward in {countdown}</span>
-                    <span className="text-xs opacity-90 truncate">Keep exploring to earn rewards</span>
+                  <Clock className="w-5 h-5 sm:w-5 sm:h-5 animate-spin flex-shrink-0" />
+                  <div className="flex flex-col gap-0 min-w-0">
+                    <span className="font-bold text-sm sm:text-sm leading-snug">⏳ Next reward in {countdown}</span>
+                    <span className="text-xs opacity-95 leading-snug">Keep exploring to earn rewards</span>
                   </div>
                 </>
               )}
@@ -156,7 +156,7 @@ export const TimedRewardBanner = () => {
               {isReady && claimsLeft > 0 && (
                 <button
                   onClick={handleClaimReward}
-                  className="bg-white text-amber-600 hover:bg-slate-100 text-xs sm:text-sm font-bold px-3 sm:px-4 py-1 sm:py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap"
+                  className="bg-white text-amber-600 hover:bg-slate-100 text-xs sm:text-sm font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap"
                 >
                   Claim Now
                 </button>

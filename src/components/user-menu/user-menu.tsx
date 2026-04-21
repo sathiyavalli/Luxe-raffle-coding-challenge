@@ -11,6 +11,7 @@ interface UserMenuProps {
 
 export const UserMenu = ({ firstName }: UserMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -28,6 +29,16 @@ export const UserMenu = ({ firstName }: UserMenuProps) => {
   // Close dropdown on mobile when item is clicked
   const handleMenuItemClick = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -72,16 +83,17 @@ export const UserMenu = ({ firstName }: UserMenuProps) => {
             </Link>
 
             {/* Logout Button */}
-            <form action={logout}>
-              <button
-                type="submit"
-                onClick={handleMenuItemClick}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#FDF8F0] transition-colors duration-150 flex items-center gap-3"
-              >
-                <LogOut size={18} className="text-[#D4AF37]" />
-                Logout
-              </button>
-            </form>
+            <button
+              onClick={async () => {
+                handleMenuItemClick();
+                await handleLogout();
+              }}
+              disabled={isLoggingOut}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#FDF8F0] transition-colors duration-150 flex items-center gap-3 border-none bg-white cursor-pointer font-normal disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <LogOut size={18} className="text-[#D4AF37]" />
+              {isLoggingOut ? 'Logging out...' : 'Logout'}
+            </button>
           </div>
         </div>
       )}

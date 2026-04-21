@@ -20,7 +20,7 @@
       "carPrice": 400000,
       "ticketPrice": 50,
       "totalTickets": 8000,
-      "availableTickets": 4210
+      "availableTickets": 4209
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "carPrice": 450000,
       "ticketPrice": 30,
       "totalTickets": 15000,
-      "availableTickets": 10235
+      "availableTickets": 10234
     },
     {
       "id": 4,
@@ -53,7 +53,7 @@
       "carPrice": 200000,
       "ticketPrice": 20,
       "totalTickets": 10000,
-      "availableTickets": 485
+      "availableTickets": 482
     },
     {
       "id": 6,
@@ -64,7 +64,7 @@
       "carPrice": 180000,
       "ticketPrice": 20,
       "totalTickets": 9000,
-      "availableTickets": 54
+      "availableTickets": 51
     },
     {
       "id": 7,
@@ -130,7 +130,7 @@
       "carPrice": 220000,
       "ticketPrice": 20,
       "totalTickets": 11000,
-      "availableTickets": 2312
+      "availableTickets": 2311
     },
     {
       "id": 13,
@@ -234,6 +234,54 @@
           "quantity": 2
         }
       ]
+    },
+    "7e20fdfa-ade7-47a1-afd1-6474e9c7578e": {
+      "id": "7e20fdfa-ade7-47a1-afd1-6474e9c7578e",
+      "items": [
+        {
+          "id": 12,
+          "quantity": 1
+        }
+      ]
+    },
+    "cf9c66ad-8d9a-4f20-95ee-1620f477dd76": {
+      "id": "cf9c66ad-8d9a-4f20-95ee-1620f477dd76",
+      "items": [
+        {
+          "id": 2,
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "quantity": 1
+        }
+      ]
+    },
+    "d3a490dd-98a8-4e39-b130-b5e393e274fa": {
+      "id": "d3a490dd-98a8-4e39-b130-b5e393e274fa",
+      "items": [
+        {
+          "id": 6,
+          "quantity": 1
+        },
+        {
+          "id": 5,
+          "quantity": 2
+        }
+      ]
+    },
+    "a171db02-b802-44d5-9b73-bc3f446ba9c8": {
+      "id": "a171db02-b802-44d5-9b73-bc3f446ba9c8",
+      "items": [
+        {
+          "id": 6,
+          "quantity": 2
+        },
+        {
+          "id": 5,
+          "quantity": 1
+        }
+      ]
     }
   },
   "userOrders": {
@@ -243,7 +291,11 @@
       "eb051b9c-955e-446a-a595-70ed94046eb3",
       "36746c20-46c0-499a-b70b-f8c9f6d128b8",
       "854813c9-c772-4ad9-bbf8-3d3d1edba3cf",
-      "d66239ff-c05c-4a67-a6ac-60e24e2b5930"
+      "d66239ff-c05c-4a67-a6ac-60e24e2b5930",
+      "7e20fdfa-ade7-47a1-afd1-6474e9c7578e",
+      "cf9c66ad-8d9a-4f20-95ee-1620f477dd76",
+      "d3a490dd-98a8-4e39-b130-b5e393e274fa",
+      "a171db02-b802-44d5-9b73-bc3f446ba9c8"
     ],
     "undefined": [
       "bba8bd10-ce5f-4f2a-82fe-a92e1cf1ea5b"

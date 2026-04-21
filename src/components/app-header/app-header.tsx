@@ -29,7 +29,7 @@ export const AppHeader = async () => {
             LuxeRaffle
           </Link>
 
-          <nav className="hidden sm:block">
+          <nav className="hidden md:block">
             <ul className="flex space-x-6">
               <li>
                 <Link
@@ -49,11 +49,34 @@ export const AppHeader = async () => {
               </li>
             </ul>
           </nav>
+
+          {/* Mobile menu - compact links */}
+          <div className="md:hidden flex items-center space-x-2 ml-auto">
+            <Link
+              href="/winners"
+              className="text-gray-600 hover:text-[#D4AF37] transition-colors text-xs sm:text-sm font-medium px-2 py-1 rounded hover:bg-gray-100"
+              title="Recent winners"
+            >
+              Winners
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link
+              href="/about"
+              className="text-gray-600 hover:text-[#D4AF37] transition-colors text-xs sm:text-sm font-medium px-2 py-1 rounded hover:bg-gray-100"
+              title="About us"
+            >
+              About
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center space-x-4 sm:space-x-6">
-          <ActivityDropdown />
-          <CartIcon />
+          {firstName && (
+            <>
+              <ActivityDropdown />
+              <CartIcon />
+            </>
+          )}
           {firstName ? (
             <UserMenu firstName={firstName} />
           ) : (

@@ -1,0 +1,104 @@
+name: Tests and Coverage Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint --if-present
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Ensure coverage file exists
+        run: test -f coverage/coverage-summary.json
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Check coverage threshold
+        run: |
+          node -e "
+            const fs = require('fs');
+
+            if (!fs.existsSync('coverage/coverage-summary.json')) {
+              console.error('❌ Coverage file missing');
+              process.exit(1);
+            }
+
+            const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json'));
+            const pct = coverage.total.lines.pct;
+
+            console.log('Overall coverage:', pct + '%');
+
+            if (pct < 80) {
+              console.error('❌ Coverage below 80% threshold:', pct + '%');
+              process.exit(1);
+            }
+
+            console.log('✅ Coverage meets 80% threshold:', pct + '%');
+          "
+
+      - name: Comment PR with coverage results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            if (!fs.existsSync('./coverage/coverage-summary.json')) {
+              console.log('No coverage file found, skipping comment');
+              return;
+            }
+
+            const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8'));
+            const total = coverage.total;
+
+            const comment = `## Coverage Report
+
+            | Metric | Coverage |
+            |--------|----------|
+            | Lines | ${total.lines.pct}% |
+            | Statements | ${total.statements.pct}% |
+            | Functions | ${total.functions.pct}% |
+            | Branches | ${total.branches.pct}% |
+
+            ${total.lines.pct >= 80 ? '✅ Coverage meets 80% threshold' : '❌ Coverage below 80% threshold'}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

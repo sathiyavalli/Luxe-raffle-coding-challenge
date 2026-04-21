@@ -8,31 +8,55 @@ import { Button } from '../ui/button';
 import { useCart } from '@/context/CartContext';
 import { Plus, Minus, Gift } from 'lucide-react';
 import GiftModal from '../gift-modal/gift-modal';
+import { useAuth } from '@/hooks/useAuth';
+import { LoginRequiredModal } from '../login-required-modal/login-required-modal';
 
 export default function RaffleTile({ raffle, priority = false }: { raffle: Raffle; priority?: boolean }) {
   const { addItem, items, updateQuantity } = useCart();
+  const { isLoggedIn } = useAuth();
   const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Find if this raffle is already in cart
   const cartItem = items.find((item) => item.id === raffle.id);
   const cartQuantity = cartItem?.quantity || 0;
 
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     addItem(raffle, 1);
   };
 
   const handleIncreaseQuantity = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     if (cartQuantity > 0) {
       updateQuantity(raffle.id, cartQuantity + 1);
     }
   };
 
   const handleDecreaseQuantity = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     if (cartQuantity > 1) {
       updateQuantity(raffle.id, cartQuantity - 1);
     } else if (cartQuantity === 1) {
       updateQuantity(raffle.id, 0);
     }
+  };
+
+  const handleGiftClick = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setIsGiftModalOpen(true);
   };
 
   // Calculate sold percentage and "hot" status
@@ -72,7 +96,7 @@ export default function RaffleTile({ raffle, priority = false }: { raffle: Raffl
         <div className="flex items-center justify-between gap-2 mb-3">
           <h2 className="text-xl font-semibold flex-1">{raffle.name}</h2>
           <button
-            onClick={() => setIsGiftModalOpen(true)}
+            onClick={handleGiftClick}
             className="flex-shrink-0 p-2 hover:bg-[#D4AF37]/20 rounded-lg transition-colors duration-200 group"
             title="Send as Gift"
           >
@@ -155,6 +179,12 @@ export default function RaffleTile({ raffle, priority = false }: { raffle: Raffl
           </div>
         </div>
       </div>
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
 
       {/* Gift Modal */}
       <GiftModal

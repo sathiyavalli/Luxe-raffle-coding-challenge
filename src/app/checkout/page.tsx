@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { order } from '@/server-functions/order';
@@ -8,13 +10,37 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AlertCircle, CheckCircle, Loader } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Redirect if not logged in
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-12">
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <AlertCircle className="mx-auto h-24 w-24 text-orange-400 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Login Required
+            </h1>
+            <p className="text-gray-600 mb-6">
+              Please log in to your account to complete your purchase.
+            </p>
+            <Link href="/login">
+              <Button>Go to Login</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Redirect if cart is empty
   if (items.length === 0) {
