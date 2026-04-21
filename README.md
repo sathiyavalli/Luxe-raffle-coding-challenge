@@ -2,7 +2,7 @@
 
 ## 📋 Project Status: ✅ COMPLETE & PRODUCTION-READY
 
-This is a fully-functional web application for managing luxury item raffles with comprehensive testing, error handling, and CI/CD integration.
+This is a fully-functional web application for managing luxury item raffles with comprehensive testing and error handling.
 
 ---
 
@@ -11,7 +11,6 @@ This is a fully-functional web application for managing luxury item raffles with
 ### Installation
 ```bash
 npm install                    # Install dependencies
-npx husky install             # Setup git hooks
 npm run dev                   # Start development server (http://localhost:3000)
 ```
 
@@ -67,7 +66,7 @@ npm run start                 # Production server
 9. **🔔 Activity Feed** - See recent entries and winners in real-time
 10. **📱 Mobile Responsive** - Perfect on phones, tablets, and desktops
 11. **🛡️ Global Error Boundary** - Graceful error handling prevents app crashes
-12. **🧪 Automated Testing** - 15 tests, 85% coverage, CI/CD enforcement
+12. **🧪 Automated Testing** - 15 tests, 85% coverage
 
 ---
 
@@ -79,7 +78,7 @@ npm run start                 # Production server
 - **TypeScript** - Type-safe code
 - **TailwindCSS** - Responsive styling
 - **Vitest 4.1.4** - Fast unit testing
-- **GitHub Actions** - CI/CD automation
+
 
 ### Quality Metrics
 ```
@@ -90,14 +89,7 @@ npm run start                 # Production server
 ✅ ESLint: No errors
 ```
 
-### CI/CD Pipeline
-1. ✅ Automated test runs on push
-2. ✅ Coverage enforcement (80% minimum)
-3. ✅ Pre-commit hooks with Husky
-4. ✅ Blocks merge if tests fail
-5. ✅ Auto-formatting with Prettier
 
----
 
 ## 🎨 Core Features Explained
 
@@ -144,15 +136,9 @@ Browse a beautiful grid of luxury raffles with smart filtering, real-time countd
 ### How to Run Tests
 ```bash
 npm run test              # Watch mode (development)
-npm run test -- --run     # Single run (CI/CD)
+npm run test -- --run     # Single test run
 npm run coverage          # Generate coverage report
 ```
-
-### CI/CD Enforcement
-- Runs automatically on every push
-- Blocks merge if coverage drops below 80%
-- Pre-commit hooks prevent bad commits
-- Coverage reports available on every build
 
 ---
 
@@ -202,9 +188,7 @@ luxe-raffle-coding-challenge/
 │   │   ├── ui/button.test.tsx
 │   │   └── back-to-top.test.tsx
 │   └── middleware.ts                # Auth middleware
-├── .github/workflows/               # CI/CD automation
-│   └── ci.yml                       # GitHub Actions workflow
-├── .husky/                          # Git hooks
+
 ├── vitest.config.ts                 # Test configuration
 ├── next.config.ts                   # Next.js config
 ├── tsconfig.json                    # TypeScript config
@@ -279,8 +263,7 @@ See [ROUTING_LIMITATION.md](ROUTING_LIMITATION.md) for detailed explanation and 
 - ✅ Global error boundary implementation
 - ✅ Automated testing with Vitest
 - ✅ 80% coverage threshold enforced
-- ✅ CI/CD pipeline configured
-- ✅ Pre-commit hooks with Husky
+
 - ✅ All features implemented
 - ✅ Mobile responsive
 - ✅ Production-ready code
@@ -391,8 +374,7 @@ For questions about:
 - [ ] Tests pass: `npm run test -- --run` ✅
 - [ ] Coverage > 80%: `npm run coverage` ✅
 - [ ] Error boundary in action: Break something in browser console
-- [ ] CI/CD configured: Check `.github/workflows/ci.yml`
-- [ ] Pre-commit hooks: Try `git commit` (should run tests)
+
 
 ---
 
@@ -402,7 +384,7 @@ For questions about:
 |------|--------|---------|
 | **Error Boundary** | ✅ | Global error catching with fallback UI |
 | **Testing** | ✅ | 15 tests, 85% coverage, all passing |
-| **CI/CD** | ✅ | GitHub Actions, 80% coverage enforcement |
+| **Testing** | ✅ | Vitest with 85% coverage |
 | **Features** | ✅ | 12+ features fully implemented |
 | **Mobile** | ✅ | Responsive design, tested on all breakpoints |
 | **Security** | ✅ | JWT auth, HTTP-only cookies, input validation |

@@ -1,4 +1,4 @@
-# Global Error Boundary & CI/CD Implementation Summary
+# Global Error Boundary Implementation Summary
 
 ## ✅ Completed Implementation
 
@@ -107,63 +107,7 @@ Error Handling Flow:
 
 **Total: 15 passing tests** ✅
 
-### 3. CI/CD Pipeline Setup
 
-#### GitHub Actions Workflow (.github/workflows/test-coverage.yml)
-
-**Triggers:**
-- Push to `main` or `develop` branches
-- Pull requests to `main` or `develop`
-
-**Test Matrix:**
-- Node.js 18.x and 20.x (parallel execution)
-
-**Workflow Steps:**
-1. Checkout code
-2. Setup Node.js with npm cache
-3. Install dependencies
-4. Run ESLint
-5. Build application (`npm run build`)
-6. Run tests with coverage (`npm run test:coverage`)
-7. Upload coverage to Codecov
-8. Check coverage >= 80% (BLOCKS if below)
-9. Comment PR with coverage metrics
-
-**Coverage Enforcement:**
-```yaml
-Coverage Requirements:
-  Lines: >= 80%
-  Statements: >= 80%
-  Functions: >= 80%
-  Branches: >= 80%
-  
-Enforcement:
-  ❌ Workflow fails if coverage < 80%
-  ❌ PR cannot be merged without passing
-  ✅ Prevents "coverage debt" accumulation
-  ✅ Forces continuous testing practices
-```
-
-#### Pre-Commit Hooks (Husky + lint-staged)
-
-**Installed:**
-- husky: ^9.1.7 - Git hooks framework
-- lint-staged: ^16.4.0 - Staged files linting
-
-**Pre-Commit Hook** (`.husky/pre-commit`)
-```bash
-Runs:
-1. npm run test:coverage
-2. Checks if coverage >= 80%
-3. Blocks commit if tests fail
-4. Blocks commit if coverage < 80%
-```
-
-**Lint-Staged Config** (`package.json`)
-```json
-- *.{ts,tsx}: eslint --fix, prettier --write
-- *.{js,json,css,md}: prettier --write
-```
 
 ### 4. NPM Scripts Added
 
@@ -172,7 +116,6 @@ npm run test              # Run tests once
 npm run test:watch       # Watch mode for development
 npm run test:coverage    # Run with coverage report
 npm run test:ui          # Interactive UI for tests
-npm run prepare          # Hook for husky (automatic)
 ```
 
 ## 📊 Current Test Coverage
@@ -187,11 +130,6 @@ Status:      Ready for expansion
 
 ```
 luxe-raffle-coding-challenge/
-├── .github/
-│   └── workflows/
-│       └── test-coverage.yml          ◄──── CI/CD Pipeline
-├── .husky/
-│   └── pre-commit                      ◄──── Pre-commit hook
 ├── src/
 │   ├── components/
 │   │   ├── client-wrapper.tsx          ◄──── Global error boundary wrapper
@@ -242,28 +180,7 @@ After running `npm run test:coverage`:
 - Coverage data: `coverage/coverage-final.json`
 - LCOV format: `coverage/lcov.info` (for Codecov)
 
-### Making a Commit
 
-```bash
-git add .
-git commit -m "feature: add new feature"
-
-# Husky pre-commit hook will:
-# ✅ Run all tests
-# ✅ Check coverage >= 80%
-# ✅ Block commit if either fails
-```
-
-### Creating a Pull Request
-
-1. Push to feature branch
-2. Create PR to `main` or `develop`
-3. GitHub Actions will:
-   - ✅ Run full test suite
-   - ✅ Build project
-   - ✅ Check coverage
-   - ✅ Post coverage report as comment
-4. PR cannot merge if coverage < 80%
 
 ## 📋 Workflow Diagram
 
@@ -273,8 +190,7 @@ Developer
     ├─────► git commit
     │           │
     │           ▼
-    │       .husky/pre-commit
-    │           │
+           │
     │           ├─► npm run test:coverage
     │           │       │
     │           │       ▼
@@ -291,7 +207,7 @@ Developer
     └─► git push
             │
             ▼
-        GitHub Actions
+
             │
             ├─► npm run build
             ├─► npm run test:coverage
@@ -351,23 +267,7 @@ npm ls @vitest/coverage-v8
 npm run test:coverage -- --reporter=verbose
 ```
 
-### Pre-commit hook not running
 
-```bash
-# Reinitialize Husky
-npx husky install
-
-# Make pre-commit executable
-chmod +x .husky/pre-commit
-```
-
-### Cannot push to main
-
-1. Check local coverage: `npm run test:coverage`
-2. Fix failing tests
-3. Improve coverage to 80%+
-4. Create commit
-5. Push again
 
 ## 📚 Next Steps
 
@@ -413,12 +313,9 @@ See [TESTING.md](./TESTING.md) for:
 
 - [x] Global Error Boundary implemented
 - [x] ClientWrapper with providers
-- [x] Vitest configured with 80% coverage threshold
+- [x] Vitest configured with coverage tracking
 - [x] Test utilities and helpers created
 - [x] Component tests written (15 tests)
-- [x] GitHub Actions CI/CD pipeline created
-- [x] Pre-commit hooks with Husky configured
-- [x] Lint-staged configuration added
 - [x] NPM scripts for testing added
 - [x] Documentation created
 

@@ -1,14 +1,14 @@
-# Testing & CI/CD Documentation
+# Testing Documentation
 
 ## Overview
 
-This project uses **Vitest** for unit and component testing, with **GitHub Actions** for CI/CD automation and **Husky** for pre-commit testing.
+This project uses **Vitest** for unit and component testing with comprehensive coverage tracking.
 
 ### Key Architecture Components
 
 - **Global Error Boundary**: `ErrorBoundary` component catches and handles React errors globally
 - **Client Wrapper**: `ClientWrapper` wraps the app with `ErrorBoundary` and `QueryClientProvider`
-- **Test Coverage Requirement**: Minimum 80% coverage required for commits and merges
+- **Test Coverage Tracking**: Coverage metrics and reporting included
 
 ## Testing Setup
 
@@ -127,80 +127,9 @@ describe('Button', () => {
 });
 ```
 
-## CI/CD Pipeline
 
-### GitHub Actions Workflow
 
-File: `.github/workflows/test-coverage.yml`
 
-**Triggers:**
-- Push to `main` or `develop` branches
-- Pull requests to `main` or `develop` branches
-
-**Jobs:**
-1. **Test Job**
-   - Runs on Node.js 18.x and 20.x
-   - Installs dependencies
-   - Runs linter
-   - Builds application
-   - Runs tests with coverage
-   - Uploads coverage to Codecov
-   - **Blocks if coverage < 80%**
-
-2. **Prevent Push Job**
-   - Ensures all checks pass on main branch
-
-### Coverage Requirements
-
-The pipeline enforces:
-- ✅ Minimum 80% line coverage
-- ✅ Minimum 80% statement coverage
-- ✅ Minimum 80% function coverage
-- ✅ Minimum 80% branch coverage
-
-If coverage falls below 80%, the CI/CD pipeline will:
-1. ❌ Fail the GitHub Actions workflow
-2. ❌ Post a comment on the PR with coverage metrics
-3. ❌ Block merging until coverage is improved
-
-### PR Coverage Report
-
-When a PR is created, the workflow automatically comments with:
-
-```markdown
-## Coverage Report
-
-| Metric | Coverage |
-|--------|----------|
-| Lines | XX% |
-| Statements | XX% |
-| Functions | XX% |
-| Branches | XX% |
-
-✅ Coverage meets 80% threshold
-```
-
-## Pre-Commit Hooks
-
-### Husky Configuration
-
-File: `.husky/pre-commit`
-
-**Prevents commits if:**
-- ❌ Tests fail
-- ❌ Coverage is below 80%
-
-**Also runs via lint-staged:**
-- ESLint fix on `.ts` and `.tsx` files
-- Prettier format on all files
-
-### Workflow
-
-1. User attempts to commit
-2. Pre-commit hook runs `npm run test:coverage`
-3. If tests fail → ❌ commit blocked
-4. If coverage < 80% → ❌ commit blocked
-5. If all pass → ✅ commit allowed
 
 ## Coverage Improvement Guide
 
@@ -260,18 +189,9 @@ describe('MyComponent', () => {
 - Check coverage provider: `npm ls @vitest/coverage-v8`
 - Run: `npm run test:coverage` (not just `npm test`)
 
-### Pre-commit Hook Not Running
 
-- Verify Husky is installed: `npm ls husky`
-- Reinitialize hooks: `npx husky install`
-- Check file permissions: `chmod +x .husky/pre-commit`
 
-### Cannot Push to Main
 
-1. Check coverage: `npm run test:coverage`
-2. Fix failing tests locally
-3. Improve coverage to 80%+
-4. Commit and push
 
 ## Best Practices
 
@@ -288,12 +208,10 @@ describe('MyComponent', () => {
 1. Run `npm run test` to execute the test suite
 2. Check coverage with `npm run test:coverage`
 3. Improve coverage if needed
-4. Create a commit (husky will check coverage)
-5. Push to remote (GitHub Actions will verify)
+4. Commit changes and push to remote
 
 ---
 
 For more information on testing best practices, see:
 - [Vitest Documentation](https://vitest.dev/)
 - [Testing Library Best Practices](https://testing-library.com/docs/)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
