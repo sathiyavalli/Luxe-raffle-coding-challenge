@@ -50,19 +50,31 @@ export const AppFooter = () => {
             <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-800">
+                <button 
+                  className="text-gray-600 hover:text-gray-800"
+                  aria-label="Facebook - not available in demo"
+                  disabled
+                >
                   Facebook
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-800">
+                <button 
+                  className="text-gray-600 hover:text-gray-800"
+                  aria-label="Twitter - not available in demo"
+                  disabled
+                >
                   Twitter
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-800">
+                <button 
+                  className="text-gray-600 hover:text-gray-800"
+                  aria-label="Instagram - not available in demo"
+                  disabled
+                >
                   Instagram
-                </a>
+                </button>
               </li>
             </ul>
           </div>

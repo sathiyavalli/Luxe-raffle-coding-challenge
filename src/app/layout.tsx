@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { BackToTop } from '@/components/back-to-top/back-to-top';
-import { SpinWheel } from '@/components/spin-wheel/spin-wheel';
 import { AuthProvider } from '@/context/AuthContext';
 import { ReferralNotificationCenter } from '@/components/referral-notification-center/referral-notification-center';
 import { TimedRewardBanner } from '@/components/timed-reward-banner/timed-reward-banner';
@@ -13,11 +12,15 @@ import { decryptToken } from '@/lib/token';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -39,13 +42,17 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preload" href="/images/hero-bg.png" as="image" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
           <AuthProvider isLoggedIn={isLoggedIn} user={user}>
             <BackToTop />
-            <SpinWheel isLoggedIn={isLoggedIn} />
             <ReferralNotificationCenter />
             <TimedRewardBanner />
             <div className="grid min-h-dvh grid-rows-[auto_1fr_auto]">

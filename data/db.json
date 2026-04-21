@@ -20,7 +20,7 @@
       "carPrice": 400000,
       "ticketPrice": 50,
       "totalTickets": 8000,
-      "availableTickets": 4212
+      "availableTickets": 4210
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "carPrice": 450000,
       "ticketPrice": 30,
       "totalTickets": 15000,
-      "availableTickets": 10237
+      "availableTickets": 10235
     },
     {
       "id": 4,
@@ -42,7 +42,7 @@
       "carPrice": 220000,
       "ticketPrice": 20,
       "totalTickets": 11000,
-      "availableTickets": 211
+      "availableTickets": 209
     },
     {
       "id": 5,
@@ -199,13 +199,51 @@
           "quantity": 1
         }
       ]
+    },
+    "36746c20-46c0-499a-b70b-f8c9f6d128b8": {
+      "id": "36746c20-46c0-499a-b70b-f8c9f6d128b8",
+      "items": [
+        {
+          "id": 3,
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "quantity": 1
+        }
+      ]
+    },
+    "854813c9-c772-4ad9-bbf8-3d3d1edba3cf": {
+      "id": "854813c9-c772-4ad9-bbf8-3d3d1edba3cf",
+      "items": [
+        {
+          "id": 3,
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "quantity": 1
+        }
+      ]
+    },
+    "d66239ff-c05c-4a67-a6ac-60e24e2b5930": {
+      "id": "d66239ff-c05c-4a67-a6ac-60e24e2b5930",
+      "items": [
+        {
+          "id": 4,
+          "quantity": 2
+        }
+      ]
     }
   },
   "userOrders": {
     "1": [
       "b2a7acf1-da5d-41f2-bc4e-3e8504eb0841",
       "d57feba4-317b-4119-b7c7-a7d8f8c96621",
-      "eb051b9c-955e-446a-a595-70ed94046eb3"
+      "eb051b9c-955e-446a-a595-70ed94046eb3",
+      "36746c20-46c0-499a-b70b-f8c9f6d128b8",
+      "854813c9-c772-4ad9-bbf8-3d3d1edba3cf",
+      "d66239ff-c05c-4a67-a6ac-60e24e2b5930"
     ],
     "undefined": [
       "bba8bd10-ce5f-4f2a-82fe-a92e1cf1ea5b"

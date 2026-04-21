@@ -88,9 +88,14 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{' '}
-              <a href="#" className="underline underline-offset-4">
+              <button 
+                type="button" 
+                className="underline underline-offset-4 cursor-pointer"
+                aria-label="Sign up functionality not available in demo"
+                disabled
+              >
                 Sign up
-              </a>
+              </button>
             </div>
           </form>
         </CardContent>

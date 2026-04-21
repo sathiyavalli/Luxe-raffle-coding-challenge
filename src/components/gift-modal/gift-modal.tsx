@@ -105,31 +105,29 @@ export default function GiftModal({ isOpen, onClose, raffle, availableTickets }:
             {/* Ticket Selection */}
             <div>
               <label className="block text-sm font-semibold text-[#8B7500] mb-3">
-                Number of Tickets ({availableTickets} available)
+                Number of Tickets to Gift
               </label>
               <div className="flex gap-2">
                 {[1, 2, 3, 5, 10].map((num) => (
-                  num <= availableTickets && (
-                    <button
-                      key={num}
-                      onClick={() => setSelectedTickets(num)}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                        selectedTickets === num
-                          ? 'bg-[#D4AF37] text-white shadow-lg shadow-[#D4AF37]/50'
-                          : 'bg-gray-100 text-gray-700 border-2 border-[#D4AF37] hover:bg-[#D4AF37]/10'
-                      }`}
-                    >
-                      {num}
-                    </button>
-                  )
+                  <button
+                    key={num}
+                    onClick={() => setSelectedTickets(num)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      selectedTickets === num
+                        ? 'bg-[#D4AF37] text-white shadow-lg shadow-[#D4AF37]/50'
+                        : 'bg-gray-100 text-gray-700 border-2 border-[#D4AF37] hover:bg-[#D4AF37]/10'
+                    }`}
+                  >
+                    {num}
+                  </button>
                 ))}
               </div>
               <input
                 type="number"
                 min="1"
-                max={availableTickets}
+                max={100}
                 value={selectedTickets}
-                onChange={(e) => setSelectedTickets(Math.max(1, Math.min(availableTickets, parseInt(e.target.value) || 1)))}
+                onChange={(e) => setSelectedTickets(Math.max(1, parseInt(e.target.value) || 1))}
                 className="w-full mt-3 px-4 py-2 border-2 border-[#D4AF37] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
               />
             </div>

@@ -56,13 +56,6 @@ export default function CountdownTimer() {
   return (
     <div className="w-full py-8 px-4 mb-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h2 className="text-lg font-bold text-[#8B7500] uppercase tracking-widest">
-            ⏳ Event Ends In
-          </h2>
-        </div>
-
         {/* Timer Boxes */}
         <div className="flex justify-center gap-4 md:gap-8">
           <TimeBox value={time.days} label="Days" />

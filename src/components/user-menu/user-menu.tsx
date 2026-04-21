@@ -35,7 +35,7 @@ export const UserMenu = ({ firstName }: UserMenuProps) => {
       {/* User Status Button - Icon + Name + Badge */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200 focus:outline-none"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
         aria-label="User menu"
         aria-expanded={isOpen}
       >

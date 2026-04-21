@@ -9,7 +9,7 @@ import { useCart } from '@/context/CartContext';
 import { Plus, Minus, Gift } from 'lucide-react';
 import GiftModal from '../gift-modal/gift-modal';
 
-export default function RaffleTile({ raffle }: { raffle: Raffle }) {
+export default function RaffleTile({ raffle, priority = false }: { raffle: Raffle; priority?: boolean }) {
   const { addItem, items, updateQuantity } = useCart();
   const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
 
@@ -63,12 +63,22 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
           alt={raffle.name}
           width={300}
           height={200}
+          priority={priority}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
       </div>
 
       <div className="p-4 flex flex-col flex-grow">
-        <h2 className="text-xl font-semibold mb-3">{raffle.name}</h2>
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <h2 className="text-xl font-semibold flex-1">{raffle.name}</h2>
+          <button
+            onClick={() => setIsGiftModalOpen(true)}
+            className="flex-shrink-0 p-2 hover:bg-[#D4AF37]/20 rounded-lg transition-colors duration-200 group"
+            title="Send as Gift"
+          >
+            <Gift size={24} className="text-[#D4AF37] group-hover:scale-110 transition-transform" />
+          </button>
+        </div>
 
         {/* Progress Bar */}
         <div className="mb-3">
@@ -143,18 +153,6 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
               </>
             )}
           </div>
-
-          {/* Gift Button - Only shows when user has tickets in cart */}
-          {cartQuantity > 0 && (
-            <Button
-              onClick={() => setIsGiftModalOpen(true)}
-              variant="outline"
-              className="w-full transition-all duration-300 border-2 border-[#8B5CF6] text-white font-semibold hover:bg-[#8B5CF6] hover:shadow-lg hover:shadow-[#8B5CF6]/70 active:shadow-md flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B5CF6]/80 to-[#8B5CF6]/60 hover:from-[#8B5CF6] hover:to-[#8B5CF6] py-3"
-            >
-              <Gift size={20} />
-              🎁 Send as Gift
-            </Button>
-          )}
         </div>
       </div>
 
@@ -163,7 +161,7 @@ export default function RaffleTile({ raffle }: { raffle: Raffle }) {
         isOpen={isGiftModalOpen}
         onClose={() => setIsGiftModalOpen(false)}
         raffle={raffle}
-        availableTickets={cartQuantity}
+        availableTickets={-1}
       />
     </div>
   );

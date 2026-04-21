@@ -28,10 +28,30 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [selectedReward, setSelectedReward] = useState<(typeof REWARDS)[0] | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [canSpin, setCanSpin] = useState(true);
+  const [nextSpinTime, setNextSpinTime] = useState<string | null>(null);
 
-  // TESTING MODE: Unlimited spins
+  // Check daily spin limitation
   useEffect(() => {
-    setCanSpin(true);
+    const checkDailyLimit = () => {
+      const today = new Date().toDateString();
+      const lastSpinDate = localStorage.getItem(DAILY_SPIN_KEY);
+      
+      if (lastSpinDate === today) {
+        // Already spun today
+        setCanSpin(false);
+        // Calculate next spin time (tomorrow at 00:00)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        setNextSpinTime(tomorrow.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }));
+      } else {
+        // Fresh spin available
+        setCanSpin(true);
+        setNextSpinTime(null);
+      }
+    };
+
+    checkDailyLimit();
   }, []);
 
   useEffect(() => {
@@ -56,10 +76,14 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   }, [state]);
 
   const handleSpin = () => {
-    if (state !== 'ready' || !canSpin) return;
+    if (state !== 'ready' || !canSpin || isSpinning) return;
 
     setIsSpinning(true);
     setState('spinning');
+
+    // Record today's spin in localStorage
+    const today = new Date().toDateString();
+    localStorage.setItem(DAILY_SPIN_KEY, today);
 
     const selectedIndex = Math.floor(Math.random() * REWARDS.length);
     const segmentAngle = 360 / REWARDS.length;
@@ -76,6 +100,13 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       setSelectedReward(reward);
       setIsSpinning(false);
       setState('result');
+      setCanSpin(false);
+      
+      // Calculate next spin time
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      setNextSpinTime(tomorrow.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }));
     }, SPIN_DURATION + 200);
   };
 
@@ -101,6 +132,7 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <button
               onClick={handleClose}
               className="p-2 hover:bg-amber-600/30 rounded-full transition-all duration-200 border border-amber-600/50 flex-shrink-0"
+              aria-label="Close spin wheel"
             >
               <X size={20} className="text-amber-400 sm:w-6 sm:h-6" />
             </button>
@@ -111,7 +143,7 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </p>
 
           {/* Wheel Container */}
-          <div className="flex justify-center mb-12 w-full">
+          <div className="flex justify-center mb-8 w-full">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96">
               {/* Outer Ring with Border */}
               <div
@@ -283,6 +315,7 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                 ? '0 0 30px rgba(212, 175, 55, 0.8), inset 0 0 10px rgba(0, 0, 0, 0.2)'
                 : '0 8px 20px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
             }}
+            aria-label={isSpinning ? 'Spinning the wheel' : 'Spin the wheel to win rewards'}
           >
             {isSpinning ? '🎡 SPINNING... HOLD ON!' : '✨ CLAIM YOUR FORTUNE'}
           </button>
@@ -314,6 +347,13 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           }
           .sparkle {
             animation: sparkle-float 2s ease-in-out infinite;
+          }
+          .spin-wheel-modal::-webkit-scrollbar {
+            display: none;
+          }
+          .spin-wheel-modal {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
           }
         `}</style>
 
@@ -364,16 +404,10 @@ export const SpinWheel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             >
               Close
             </Button>
-            {!isLoggedIn ? (
+            {!isLoggedIn && (
               <Link href="/login" className="flex-1">
                 <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-bold">
                   Log In
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/checkout" className="flex-1">
-                <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold">
-                  Shop Now
                 </Button>
               </Link>
             )}

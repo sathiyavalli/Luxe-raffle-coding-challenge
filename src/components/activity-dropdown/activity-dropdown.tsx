@@ -50,7 +50,7 @@ export const ActivityDropdown = () => {
       {/* Activity Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200 focus:outline-none group"
+        className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 group"
         aria-label="Recent activity"
         aria-expanded={isOpen}
       >
@@ -61,14 +61,16 @@ export const ActivityDropdown = () => {
       {/* Mobile Activity Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="sm:hidden flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200"
+        className="sm:hidden flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-[#FDF8F0] cursor-pointer transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
+        aria-label="Recent activity"
+        aria-expanded={isOpen}
       >
         <Activity size={20} className="text-[#D4AF37]" />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 sm:right-0 -right-2 mt-2 w-80 sm:w-80 md:w-96 max-w-[calc(100vw-1rem)] bg-white rounded-xl shadow-xl border-2 border-[#D4AF37] z-50 max-h-96 overflow-hidden flex flex-col">
+        <div className="absolute left-1/2 sm:right-0 sm:left-auto -translate-x-1/2 sm:translate-x-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 md:w-96 bg-white rounded-xl shadow-xl border-2 border-[#D4AF37] z-50 max-h-96 overflow-hidden flex flex-col">
           {/* Header */}
           <div className="px-3 sm:px-4 py-3 border-b-2 border-[#D4AF37]/20 flex items-center justify-between bg-gradient-to-r from-[#FDF8F0] to-white sticky top-0">
             <div className="flex items-center gap-2 min-w-0">

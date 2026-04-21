@@ -4,6 +4,7 @@ import RafflesGrid from '@/components/raffles-grid/raffles-grid';
 import { getRaffles } from '@/server-functions/getRaffles';
 import { Raffle } from '@/types/Raffle';
 import { useAuth } from '@/context/AuthContext';
+import { SpinWheel } from '@/components/spin-wheel/spin-wheel';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -114,6 +115,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <SpinWheel isLoggedIn={!!user} />
       <RafflesGrid raffles={raffles} />
     </>
   );

@@ -42,7 +42,7 @@ export const ReferralProgram = ({ userName = 'User', isLoggedIn }: ReferralProgr
 
   if (!isLoggedIn) {
     return (
-      <Link href="/login">
+      <Link href="/login" className="block w-full">
         <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-[#D4AF37] rounded-lg p-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all">
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
@@ -69,9 +69,8 @@ export const ReferralProgram = ({ userName = 'User', isLoggedIn }: ReferralProgr
 
   return (
     <>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="w-full text-left bg-gradient-to-br from-[#FDF8F0] to-[#FAF4E6] border-2 border-[#D4AF37] rounded-lg p-4 hover:shadow-lg hover:border-[#B8860B] transition-all"
+      <div
+        className="w-full bg-gradient-to-br from-[#FDF8F0] to-[#FAF4E6] border-2 border-[#D4AF37] rounded-lg p-4 hover:shadow-lg hover:border-[#B8860B] transition-all min-h-[220px] flex flex-col justify-between"
       >
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -97,27 +96,38 @@ export const ReferralProgram = ({ userName = 'User', isLoggedIn }: ReferralProgr
           </div>
         </div>
 
-        {/* Copy Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCopy();
-          }}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-[#FDF8F0] text-[#D4AF37] rounded-lg border border-[#D4AF37] transition-all font-semibold text-sm"
-        >
-          {copied ? (
-            <>
-              <Check size={16} />
-              Copied!
-            </>
-          ) : (
-            <>
-              <Copy size={16} />
-              Copy Link
-            </>
-          )}
-        </button>
-      </button>
+        <div className="space-y-2">
+          {/* Copy Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopy();
+            }}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-[#FDF8F0] text-[#D4AF37] rounded-lg border border-[#D4AF37] transition-all font-semibold text-sm"
+          >
+            {copied ? (
+              <>
+                <Check size={16} />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy size={16} />
+                Copy Link
+              </>
+            )}
+          </button>
+
+          {/* Invite Button */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] hover:from-[#B8860B] hover:to-[#8B7500] text-white rounded-lg border border-[#D4AF37] transition-all font-semibold text-sm"
+          >
+            <Gift size={16} />
+            Invite Friends
+          </button>
+        </div>
+      </div>
 
       {/* Referral Modal */}
       <ReferralModal
