@@ -340,7 +340,7 @@ interface OrderItem {
 
 *Business Value:*
 - Creates urgency through time-limited offers
-- Increases conversion rates with FOMO (fear of missing out)
+- Increases conversion rates and CTR with FOMO (fear of missing out)
 - Promotional tool that drives purchases during peak times
 - A/B testing lever for marketing campaigns
 - Keeps homepage fresh and engaging with rotating offers
@@ -534,49 +534,6 @@ interface OrderItem {
   npm run test -- --run     # Single test run
   npm run coverage          # Generate coverage report
   ```
-
----
-
-### 13. 🚀 CI/CD Pipeline with Coverage Enforcement
-**Why This Feature:**
-
-*Business Value:*
-- Enables rapid iteration and deployment velocity
-- Reduces human error in release process
-- Scales quality as team grows
-- Provides audit trail for compliance and debugging
-- Enables safe rapid releases (daily/hourly if needed)
-
-*User Value:*
-- Get bug fixes and new features faster
-- Know that everything that ships has passed automated tests
-- Fewer production issues and rollbacks
-- Continuous improvement without waiting for release day
-- Feature rollouts are safe and reliable
-**What It Does (Non-Technical):**
-- Automatically runs tests when code is pushed
-- Blocks merging if tests fail or coverage drops below 80%
-- Ensures code quality before deployment
-- Developers get immediate feedback
-
-**Technical Implementation**:
-- **Tool**: GitHub Actions workflow
-- **Configuration**: [.github/workflows/ci.yml](.github/workflows/ci.yml)
-
-- **Pipeline Steps**:
-  1. Install dependencies
-  2. Run linting (ESLint)
-  3. Build Next.js app
-  4. Run test suite with Vitest
-  5. Check coverage with Codecov
-  6. Block push if coverage < 80%
-
-- **Pre-commit Hooks**:
-  - Tool: Husky + lint-staged
-  - Runs tests on staged files before commit
-  - Prevents commits that break tests
-  - Auto-formats code to maintain standards
-
 ---
 
 ## Advanced Features
